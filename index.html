@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap Intensivo - Administración de Servidores en 30 días</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --border: #e5e5e5;
+    --text: #1a1a1a;
+    --text-soft: #555555;
+    --text-muted: #888888;
+    --accent: #2563eb;
+    --accent-soft: #eff6ff;
+    --done: #10b981;
+    --done-soft: #ecfdf5;
+    --code-bg: #f4f4f4;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    color: var(--text-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .progress-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0 40px;
+    position: sticky;
+    top: 12px;
+    z-index: 10;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .progress-percent {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-bar {
+    background: var(--border);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+    border-radius: 999px;
+  }
+
+  .progress-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  .reset-btn:hover {
+    background: var(--code-bg);
+  }
+
+  .intro {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    border-radius: 4px;
+    margin-bottom: 32px;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  .intro strong { color: var(--text); }
+
+  .week {
+    margin-bottom: 40px;
+  }
+
+  .week-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--text);
+  }
+
+  .week-number {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .week-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .week-goal {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin: 0 0 20px;
+    font-style: italic;
+  }
+
+  .day {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .day.completed {
+    border-color: var(--done);
+    background: var(--done-soft);
+  }
+
+  .day-header {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+
+  .day-header:hover {
+    background: var(--code-bg);
+  }
+
+  .day.completed .day-header:hover {
+    background: #d1fae5;
+  }
+
+  .day-toggle {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 14px;
+    transition: transform 0.2s;
+  }
+
+  .day.open .day-toggle {
+    transform: rotate(90deg);
+  }
+
+  .day-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 50px;
+  }
+
+  .day-title {
+    font-weight: 600;
+    flex: 1;
+    font-size: 15px;
+  }
+
+  .day-progress {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .day-content {
+    display: none;
+    padding: 0 18px 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .day.open .day-content {
+    display: block;
+  }
+
+  .section {
+    margin-top: 16px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+  }
+
+  .topic-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+
+  .topic-list li {
+    padding: 4px 0;
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+
+  .topic-list li::before {
+    content: "—";
+    color: var(--text-muted);
+    margin-right: 8px;
+  }
+
+  .resources {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    transition: background 0.15s;
+  }
+
+  .resource-item:hover {
+    background: var(--code-bg);
+  }
+
+  .resource-item input[type="checkbox"] {
+    margin-top: 4px;
+    cursor: pointer;
+    accent-color: var(--done);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .resource-item label {
+    flex: 1;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .resource-item.checked label {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .resource-item a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .resource-item a:hover {
+    text-decoration: underline;
+  }
+
+  .resource-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--code-bg);
+    color: var(--text-muted);
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .practice {
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 10px;
+  }
+
+  .practice strong { color: var(--text); }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px 60px; }
+    h1 { font-size: 22px; }
+    .week-title { font-size: 18px; }
+    .day-header { padding: 12px 14px; gap: 8px; }
+    .day-label { min-width: 40px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Roadmap Intensivo · 30 días</h1>
+      <p class="subtitle">De cero a administrador de servidores funcional — networking, Linux, cloud, virtualización y DevOps básico.</p>
+    </header>
+
+    <div class="progress-card">
+      <div class="progress-header">
+        <span class="progress-label">Progreso general</span>
+        <span class="progress-percent" id="percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="fill" style="width: 0%"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="completed-count">0 / 0 recursos</span>
+        <span id="days-count">0 / 30 días</span>
+        <button class="reset-btn" onclick="resetProgress()">Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="intro">
+      <strong>Objetivo:</strong> en 30 días estarás listo para recibir, configurar y operar la infraestructura del proveedor saliente. No serás experto, pero entenderás IPs, VLANs, podrás levantar y endurecer servidores Linux, manejar virtualización, cloud y VPS, y solucionar incidencias comunes. Dedica entre 3 y 5 horas diarias. Marca cada recurso al completarlo — tu progreso se guarda automáticamente en este navegador.
+    </div>
+
+    <!-- ============ SEMANA 1 ============ -->
+    <section class="week">
+      <div class="week-header">
+        <span class="week-number">Semana 1</span>
+        <h2 class="week-title">Networking + Linux base</h2>
+      </div>
+      <p class="week-goal">Sin red y sin Linux no se puede administrar nada. Esta semana es la columna vertebral.</p>
+
+      <!-- DÍA 1 -->
+      <div class="day" data-day="1">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 1</span>
+          <span class="day-title">Modelo OSI, TCP/IP y cómo viaja un paquete</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Capas OSI vs. TCP/IP</li>
+              <li>Diferencia entre TCP y UDP, qué es un puerto</li>
+              <li>Encapsulamiento: trama, paquete, segmento</li>
+              <li>MAC address vs. IP, ARP</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r1-1"><label for="r1-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=vrh0epPAC5w" target="_blank">OSI Model Explained — PowerCert (10 min)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r1-2"><label for="r1-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=PpsEaqJV_A0" target="_blank">TCP vs UDP — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r1-3"><label for="r1-3"><span class="resource-tag">Lectura</span><a href="https://www.cloudflare.com/learning/network-layer/what-is-the-osi-model/" target="_blank">Cloudflare Learning — OSI Model</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r1-4"><label for="r1-4"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=qiQR5rTSshw" target="_blank">Networking Fundamentals — NetworkChuck (playlist)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> abre Wireshark o usa <code>tcpdump</code> en Linux. Captura tráfico mientras visitas una web e identifica los protocolos.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 2 -->
+      <div class="day" data-day="2">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 2</span>
+          <span class="day-title">IPs, subnetting y CIDR</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>IPv4 (clases, privadas vs. públicas) y nociones de IPv6</li>
+              <li>Máscaras de red, notación CIDR (/24, /16, etc.)</li>
+              <li>Cómo dividir una red en subredes</li>
+              <li>Broadcast, gateway, network address</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r2-1"><label for="r2-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=s_Ntt6eTn94" target="_blank">Subnetting Made Easy — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r2-2"><label for="r2-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=ZxASoLA1xUY" target="_blank">CIDR explicado — NetworkChuck</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r2-3"><label for="r2-3"><span class="resource-tag">Tool</span><a href="https://www.subnet-calculator.com/" target="_blank">Subnet Calculator (practica)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r2-4"><label for="r2-4"><span class="resource-tag">Práctica</span><a href="https://subnetipv4.com/" target="_blank">Ejercicios interactivos de subnetting</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> dado <code>192.168.1.0/24</code>, divide en 4 subredes. Calcula rango usable, broadcast y máscara de cada una sin calculadora.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 3 -->
+      <div class="day" data-day="3">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 3</span>
+          <span class="day-title">Routing, switching y VLANs</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Switch L2 vs. router L3</li>
+              <li>VLAN: por qué existen, tagged vs. untagged, trunks (802.1Q)</li>
+              <li>Tabla de routing, default gateway, rutas estáticas</li>
+              <li>NAT y port forwarding</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r3-1"><label for="r3-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=jC6MJTh9fRE" target="_blank">VLANs Explained — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r3-2"><label for="r3-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=AhOU2eOpmX0" target="_blank">Trunk vs Access Port</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r3-3"><label for="r3-3"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=RG_x2pvcEh4" target="_blank">Static Routing — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r3-4"><label for="r3-4"><span class="resource-tag">Lab</span><a href="https://www.cisco.com/c/en/us/training-events/training-certifications/exams/learning-network/get-cisco-packet-tracer.html" target="_blank">Cisco Packet Tracer (gratis)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> en Packet Tracer monta 2 VLANs separadas, verifica que no se ven entre sí, luego habilita inter-VLAN routing.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 4 -->
+      <div class="day" data-day="4">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 4</span>
+          <span class="day-title">DNS, DHCP, HTTP/HTTPS</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>DNS: registros A, AAAA, CNAME, MX, TXT, NS</li>
+              <li>Resolución recursiva vs. autoritativa</li>
+              <li>DHCP: DORA, lease, reservaciones</li>
+              <li>HTTP/HTTPS, TLS handshake básico, certificados</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r4-1"><label for="r4-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=mpQZVYPuDGU" target="_blank">DNS Explained — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r4-2"><label for="r4-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=e6-TaH5bkjo" target="_blank">DHCP Explained</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r4-3"><label for="r4-3"><span class="resource-tag">Lectura</span><a href="https://howdns.works/" target="_blank">How DNS Works — comic interactivo</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r4-4"><label for="r4-4"><span class="resource-tag">Lectura</span><a href="https://howhttps.works/" target="_blank">How HTTPS Works</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> usa <code>dig</code> y <code>nslookup</code> contra google.com — identifica registros A, NS, MX. Renueva tu IP local con <code>dhclient</code>.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 5 -->
+      <div class="day" data-day="5">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 5</span>
+          <span class="day-title">Linux: filesystem, comandos y permisos</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Estructura FHS (/etc, /var, /home, /opt, /usr)</li>
+              <li>Navegación: ls, cd, find, locate, grep, less</li>
+              <li>Permisos rwx, chmod, chown, sticky bit, umask</li>
+              <li>Pipes, redirección, xargs</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r5-1"><label for="r5-1"><span class="resource-tag">Curso</span><a href="https://linuxjourney.com/" target="_blank">Linux Journey — Grasshopper a Networking</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r5-2"><label for="r5-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=sWbUDq4S6Y8" target="_blank">Linux Crash Course — Learn Linux TV</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r5-3"><label for="r5-3"><span class="resource-tag">Cheatsheet</span><a href="https://github.com/trimstray/the-book-of-secret-knowledge#table-of-contents-1" target="_blank">The Book of Secret Knowledge (referencia)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r5-4"><label for="r5-4"><span class="resource-tag">Práctica</span><a href="https://overthewire.org/wargames/bandit/" target="_blank">OverTheWire: Bandit (niveles 0-15)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> instala Ubuntu Server en VirtualBox/VMware. Conéctate por SSH desde tu máquina anfitriona.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 6 -->
+      <div class="day" data-day="6">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 6</span>
+          <span class="day-title">Procesos, usuarios y systemd</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>ps, top, htop, kill, signals (SIGTERM/SIGKILL)</li>
+              <li>useradd, groupadd, sudo, /etc/passwd, /etc/shadow</li>
+              <li>systemctl: start, stop, enable, status</li>
+              <li>journalctl, /var/log y rotación de logs</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r6-1"><label for="r6-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=AtMR9nKoxwQ" target="_blank">systemd Explained — Learn Linux TV</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r6-2"><label for="r6-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/systemd-essentials-working-with-services-units-and-the-journal" target="_blank">DigitalOcean — systemd Essentials</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r6-3"><label for="r6-3"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs" target="_blank">journalctl tutorial</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r6-4"><label for="r6-4"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=N1vgvhiyq0E" target="_blank">Linux Users & Groups</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> crea un servicio systemd que ejecute un script propio cada vez que arranca el sistema. Comprueba con <code>systemctl status</code>.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 7 -->
+      <div class="day" data-day="7">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 7</span>
+          <span class="day-title">Bash scripting y consolidación semana 1</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Variables, condicionales, bucles en bash</li>
+              <li>Cron: programación de tareas recurrentes</li>
+              <li>Repaso de la semana: networking + Linux</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r7-1"><label for="r7-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=tK9Oc6AEnR4" target="_blank">Bash Scripting in 1 hour — Traversy</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r7-2"><label for="r7-2"><span class="resource-tag">Lectura</span><a href="https://devhints.io/bash" target="_blank">Bash Cheatsheet — devhints.io</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r7-3"><label for="r7-3"><span class="resource-tag">Lectura</span><a href="https://crontab.guru/" target="_blank">Crontab Guru</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r7-4"><label for="r7-4"><span class="resource-tag">Tool</span><a href="https://www.shellcheck.net/" target="_blank">ShellCheck (linter de bash)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Proyecto fin de semana:</strong> escribe un script que monitoree disco/CPU/RAM y mande log a un archivo cada 5 min vía cron.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SEMANA 2 ============ -->
+    <section class="week">
+      <div class="week-header">
+        <span class="week-number">Semana 2</span>
+        <h2 class="week-title">Servicios, seguridad y firewalls</h2>
+      </div>
+      <p class="week-goal">Si vas a recibir servidores en producción, lo primero es endurecerlos y filtrar lo que entra y sale.</p>
+
+      <!-- DÍA 8 -->
+      <div class="day" data-day="8">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 8</span>
+          <span class="day-title">SSH a fondo y gestión de claves</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Pares de claves, ssh-keygen, ssh-copy-id</li>
+              <li>~/.ssh/config, jump hosts, agent forwarding</li>
+              <li>Hardening de sshd_config: deshabilitar root, password auth, cambiar puerto</li>
+              <li>scp, rsync, sshfs, túneles</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r8-1"><label for="r8-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=hQWRp-FdTpc" target="_blank">SSH Crash Course — DevOps Directive</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r8-2"><label for="r8-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server" target="_blank">SSH Key Auth — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r8-3"><label for="r8-3"><span class="resource-tag">Lectura</span><a href="https://goteleport.com/blog/ssh-config/" target="_blank">SSH Config tutorial — Teleport</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r8-4"><label for="r8-4"><span class="resource-tag">Lectura</span><a href="https://www.ssh-audit.com/" target="_blank">ssh-audit (audita tu sshd)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> configura SSH solo con clave (sin password), cambia puerto, prueba conectarte usando un alias en <code>~/.ssh/config</code>.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 9 -->
+      <div class="day" data-day="9">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 9</span>
+          <span class="day-title">Firewalls: iptables, nftables, ufw, firewalld</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Tablas, cadenas y reglas (INPUT, OUTPUT, FORWARD)</li>
+              <li>Diferencia entre iptables y nftables</li>
+              <li>ufw (Ubuntu/Debian) y firewalld (RHEL/Rocky)</li>
+              <li>Persistencia de reglas tras reinicio</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r9-1"><label for="r9-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=qPEA6J9pjG8" target="_blank">iptables Tutorial — Hak5</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r9-2"><label for="r9-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu" target="_blank">UFW en Ubuntu — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r9-3"><label for="r9-3"><span class="resource-tag">Lectura</span><a href="https://www.redhat.com/sysadmin/firewall-cmd-firewalld" target="_blank">firewalld guía — Red Hat</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r9-4"><label for="r9-4"><span class="resource-tag">Lectura</span><a href="https://wiki.nftables.org/wiki-nftables/index.php/Main_Page" target="_blank">nftables Wiki oficial</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> configura ufw para permitir solo SSH (puerto custom) y HTTP/HTTPS, denegar todo lo demás. Repite la lógica con iptables.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 10 -->
+      <div class="day" data-day="10">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 10</span>
+          <span class="day-title">Hardening básico y fail2ban</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Actualizaciones automáticas (unattended-upgrades / dnf-automatic)</li>
+              <li>fail2ban: prevenir brute force</li>
+              <li>SELinux y AppArmor (modo permissive vs. enforcing)</li>
+              <li>Auditoría: lynis, chkrootkit</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r10-1"><label for="r10-1"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu" target="_blank">fail2ban en Ubuntu — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r10-2"><label for="r10-2"><span class="resource-tag">Tool</span><a href="https://cisofy.com/lynis/" target="_blank">Lynis — auditoría Linux</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r10-3"><label for="r10-3"><span class="resource-tag">Lectura</span><a href="https://www.redhat.com/sysadmin/getting-started-selinux" target="_blank">SELinux para principiantes — Red Hat</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r10-4"><label for="r10-4"><span class="resource-tag">Checklist</span><a href="https://www.cisecurity.org/cis-benchmarks" target="_blank">CIS Benchmarks (gratis con registro)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> instala fail2ban, configúralo para bloquear IPs tras 3 intentos fallidos de SSH. Corre Lynis y revisa el reporte.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 11 -->
+      <div class="day" data-day="11">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 11</span>
+          <span class="day-title">Almacenamiento, particiones y RAID</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>fdisk, parted, lsblk, blkid, /etc/fstab</li>
+              <li>LVM: PV, VG, LV — extender en caliente</li>
+              <li>Niveles de RAID (0, 1, 5, 6, 10) y su uso real</li>
+              <li>NFS y Samba para compartir almacenamiento</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r11-1"><label for="r11-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=AqEDXf9FwhY" target="_blank">LVM Explained — Learn Linux TV</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r11-2"><label for="r11-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-lvm-concepts-terminology-and-operations" target="_blank">LVM Concepts — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r11-3"><label for="r11-3"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=U-OCdTeZLac" target="_blank">RAID Levels Explained — PowerCert</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r11-4"><label for="r11-4"><span class="resource-tag">Lectura</span><a href="https://ubuntu.com/server/docs/network-file-system-nfs" target="_blank">NFS en Ubuntu Server</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> añade un disco virtual a tu VM, créalo como LVM, montalo en /mnt/data y déjalo persistente en fstab.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 12 -->
+      <div class="day" data-day="12">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 12</span>
+          <span class="day-title">Backups y disaster recovery</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Estrategia 3-2-1 (3 copias, 2 medios, 1 offsite)</li>
+              <li>rsync, tar, snapshots LVM, dd</li>
+              <li>Restic, BorgBackup (deduplicación, cifrado)</li>
+              <li>RPO y RTO — qué prometer al negocio</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r12-1"><label for="r12-1"><span class="resource-tag">Lectura</span><a href="https://restic.net/" target="_blank">Restic — backup moderno</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r12-2"><label for="r12-2"><span class="resource-tag">Lectura</span><a href="https://www.borgbackup.org/" target="_blank">BorgBackup oficial</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r12-3"><label for="r12-3"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=eifQI5uD6VM" target="_blank">rsync Tutorial — Learn Linux TV</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r12-4"><label for="r12-4"><span class="resource-tag">Lectura</span><a href="https://www.veeam.com/blog/321-backup-rule.html" target="_blank">Regla 3-2-1 — Veeam</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> automatiza con cron un backup incremental con rsync hacia otra VM. Restaura un archivo borrado para validar.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 13 -->
+      <div class="day" data-day="13">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 13</span>
+          <span class="day-title">DNS server propio (BIND / Unbound) + DHCP</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Configurar DNS interno autoritativo</li>
+              <li>Forward zones, reverse zones</li>
+              <li>DHCP server con isc-dhcp-server o Kea</li>
+              <li>Reservas por MAC</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r13-1"><label for="r13-1"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-22-04" target="_blank">BIND como DNS interno — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r13-2"><label for="r13-2"><span class="resource-tag">Lectura</span><a href="https://nlnetlabs.nl/projects/unbound/about/" target="_blank">Unbound (DNS resolver moderno)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r13-3"><label for="r13-3"><span class="resource-tag">Lectura</span><a href="https://ubuntu.com/server/docs/network-dhcp" target="_blank">DHCP server en Ubuntu</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r13-4"><label for="r13-4"><span class="resource-tag">Lectura</span><a href="https://kea.readthedocs.io/" target="_blank">Kea DHCP (sucesor de ISC DHCP)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> levanta tu propio DNS interno con dominio falso (<code>empresa.lan</code>) y un DHCP que entregue esa IP de DNS a clientes.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 14 -->
+      <div class="day" data-day="14">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 14</span>
+          <span class="day-title">Repaso semana 2 + lab integrador</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Lab integrador</p>
+            <ul class="topic-list">
+              <li>Levanta una VM Ubuntu Server desde cero</li>
+              <li>Endurece SSH (claves, puerto custom, fail2ban)</li>
+              <li>Configura UFW restrictivo</li>
+              <li>Particiona con LVM y agrega un disco extra</li>
+              <li>Programa backup automático con restic hacia otra VM</li>
+              <li>Documenta cada paso en un README — esto te servirá en producción</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos extra</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r14-1"><label for="r14-1"><span class="resource-tag">Cheatsheet</span><a href="https://github.com/imthenachoman/How-To-Secure-A-Linux-Server" target="_blank">How To Secure A Linux Server (GitHub)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r14-2"><label for="r14-2"><span class="resource-tag">Lectura</span><a href="https://wiki.archlinux.org/title/Security" target="_blank">Arch Wiki — Security (referencia universal)</a></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SEMANA 3 ============ -->
+    <section class="week">
+      <div class="week-header">
+        <span class="week-number">Semana 3</span>
+        <h2 class="week-title">Servicios productivos, virtualización y cloud</h2>
+      </div>
+      <p class="week-goal">Lo que realmente correrá sobre tus servidores: web, bases de datos, hipervisores y la nube.</p>
+
+      <!-- DÍA 15 -->
+      <div class="day" data-day="15">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 15</span>
+          <span class="day-title">Nginx: web server y reverse proxy</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>server blocks, location, upstream</li>
+              <li>Reverse proxy a una app interna</li>
+              <li>HTTPS automático con Let's Encrypt + certbot</li>
+              <li>Rate limiting y caché básico</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r15-1"><label for="r15-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=7VAI73roXaY" target="_blank">Nginx Full Course — DevOps Directive</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r15-2"><label for="r15-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms" target="_blank">Server & Location blocks — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r15-3"><label for="r15-3"><span class="resource-tag">Lectura</span><a href="https://certbot.eff.org/" target="_blank">Certbot — Let's Encrypt</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r15-4"><label for="r15-4"><span class="resource-tag">Tool</span><a href="https://www.nginxconfig.io/" target="_blank">NGINX Config Generator</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> publica un sitio HTML estático tras Nginx con HTTPS válido y un reverse proxy hacia un Node/Python en :3000.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 16 -->
+      <div class="day" data-day="16">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 16</span>
+          <span class="day-title">Bases de datos básicas: MySQL/PostgreSQL</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Instalación, usuarios, privilegios</li>
+              <li>Backups (mysqldump / pg_dump) y restauración</li>
+              <li>Conexión remota segura (bind, firewall)</li>
+              <li>Replicación primary→replica (concepto)</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r16-1"><label for="r16-1"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04" target="_blank">Instalar MySQL — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r16-2"><label for="r16-2"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/community/tutorials/how-to-install-postgresql-on-ubuntu-22-04-quickstart" target="_blank">Instalar PostgreSQL — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r16-3"><label for="r16-3"><span class="resource-tag">Lectura</span><a href="https://www.postgresql.org/docs/current/backup.html" target="_blank">Backup PostgreSQL — docs oficiales</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r16-4"><label for="r16-4"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=qw--VYLpxG4" target="_blank">PostgreSQL Crash Course — freeCodeCamp</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> instala PostgreSQL, crea DB+usuario, hace dump, borra la DB y restaura desde el dump.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 17 -->
+      <div class="day" data-day="17">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 17</span>
+          <span class="day-title">Virtualización: KVM, libvirt y Proxmox</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Hipervisor tipo 1 vs. tipo 2</li>
+              <li>KVM + libvirt + virt-manager</li>
+              <li>Proxmox VE: clúster, storage, snapshots</li>
+              <li>Conceptos de VMware ESXi (por si te lo entregan)</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r17-1"><label for="r17-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=GoZaMgEgrHw" target="_blank">Proxmox Beginner — Learn Linux TV</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r17-2"><label for="r17-2"><span class="resource-tag">Docs</span><a href="https://pve.proxmox.com/pve-docs/" target="_blank">Proxmox VE Documentation</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r17-3"><label for="r17-3"><span class="resource-tag">Lectura</span><a href="https://ubuntu.com/blog/kvm-hyphervisor" target="_blank">KVM Hypervisor — Ubuntu</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r17-4"><label for="r17-4"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=KZSCjB-Y1Ag" target="_blank">VMware ESXi Basics</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> instala Proxmox en una máquina/VM nested, crea 2 VMs y configúrales una bridge para que se vean entre sí.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 18 -->
+      <div class="day" data-day="18">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 18</span>
+          <span class="day-title">Cloud — fundamentos AWS</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>EC2, VPC, subnets, security groups, IAM</li>
+              <li>S3 (almacenamiento de objetos)</li>
+              <li>RDS (DB managed), Route53 (DNS)</li>
+              <li>Modelo de responsabilidad compartida</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r18-1"><label for="r18-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=SOTamWNgDKc" target="_blank">AWS for Beginners — freeCodeCamp</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r18-2"><label for="r18-2"><span class="resource-tag">Curso</span><a href="https://aws.amazon.com/training/digital/" target="_blank">AWS Skill Builder (gratis)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r18-3"><label for="r18-3"><span class="resource-tag">Lectura</span><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" target="_blank">VPC — docs oficiales</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r18-4"><label for="r18-4"><span class="resource-tag">Lab</span><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier (12 meses gratis)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> levanta una EC2 con Ubuntu, asígnale Security Group restrictivo, conéctate por SSH con key, monta un sitio simple.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 19 -->
+      <div class="day" data-day="19">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 19</span>
+          <span class="day-title">VPS y cloud alterno: DigitalOcean / Hetzner / Azure</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>VPS vs. cloud: cuándo conviene cada uno</li>
+              <li>Snapshots, floating IPs, volumes</li>
+              <li>Comparativa de costos (DO, Hetzner, Linode, Vultr)</li>
+              <li>Azure VMs (panorama si lo usas)</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r19-1"><label for="r19-1"><span class="resource-tag">Lectura</span><a href="https://www.digitalocean.com/docs/" target="_blank">DigitalOcean Docs</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r19-2"><label for="r19-2"><span class="resource-tag">Lectura</span><a href="https://docs.hetzner.com/cloud/" target="_blank">Hetzner Cloud Docs</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r19-3"><label for="r19-3"><span class="resource-tag">Curso</span><a href="https://learn.microsoft.com/en-us/training/azure/" target="_blank">Microsoft Learn — Azure</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r19-4"><label for="r19-4"><span class="resource-tag">Comparativa</span><a href="https://cloudprice.net/" target="_blank">CloudPrice (compara precios)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> compara especificaciones reales: ¿cuánto cuesta hostear 10 VMs (4vCPU/8GB) durante 1 mes en cloud vs. on-premise?</div>
+        </div>
+      </div>
+
+      <!-- DÍA 20 -->
+      <div class="day" data-day="20">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 20</span>
+          <span class="day-title">On-premise: hardware, networking físico, IPMI</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Servidores rack, blade, tower</li>
+              <li>iDRAC (Dell), iLO (HP), IPMI genérico</li>
+              <li>UPS, redundancia eléctrica, climatización</li>
+              <li>Cableado estructurado, patch panels</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r20-1"><label for="r20-1"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=LTjrhXl0z-Y" target="_blank">Server Hardware Basics — ServeTheHome</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r20-2"><label for="r20-2"><span class="resource-tag">Lectura</span><a href="https://www.dell.com/support/kbdoc/en-us/000178016/idrac-overview" target="_blank">iDRAC Overview — Dell</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r20-3"><label for="r20-3"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=u7vpRoQNNrA" target="_blank">Datacenter Tour 101</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r20-4"><label for="r20-4"><span class="resource-tag">Lectura</span><a href="https://www.intel.com/content/www/us/en/products/docs/servers/ipmi/ipmi-home.html" target="_blank">IPMI — Intel docs</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> si tienes acceso, conéctate al iDRAC/iLO de un servidor real, navega su consola, monta una ISO virtual e instala un OS.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 21 -->
+      <div class="day" data-day="21">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 21</span>
+          <span class="day-title">VPN site-to-site y acceso remoto</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>WireGuard (moderno, simple, rápido)</li>
+              <li>OpenVPN (legacy pero muy presente)</li>
+              <li>Tailscale / Headscale (mesh sobre WireGuard)</li>
+              <li>Cuando usar VPN vs. bastión SSH</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r21-1"><label for="r21-1"><span class="resource-tag">Lectura</span><a href="https://www.wireguard.com/quickstart/" target="_blank">WireGuard Quickstart</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r21-2"><label for="r21-2"><span class="resource-tag">Tutorial</span><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-22-04" target="_blank">WireGuard en Ubuntu — DigitalOcean</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r21-3"><label for="r21-3"><span class="resource-tag">Lectura</span><a href="https://tailscale.com/kb/" target="_blank">Tailscale Knowledge Base</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r21-4"><label for="r21-4"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=bVKNSf1p1d0" target="_blank">WireGuard Tutorial — NetworkChuck</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> levanta un WireGuard server en una VPS, conecta tu laptop como peer y accede a la red interna de otra VM.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SEMANA 4 ============ -->
+    <section class="week">
+      <div class="week-header">
+        <span class="week-number">Semana 4</span>
+        <h2 class="week-title">Automatización, contenedores y migración real</h2>
+      </div>
+      <p class="week-goal">Lo que separa al técnico que apaga incendios del que opera con calma: automatización, observabilidad y un plan claro de migración.</p>
+
+      <!-- DÍA 22 -->
+      <div class="day" data-day="22">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 22</span>
+          <span class="day-title">Docker fundamentos</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Imágenes vs. contenedores, capas</li>
+              <li>Dockerfile, docker build/run/exec/logs</li>
+              <li>Volúmenes, redes, port mapping</li>
+              <li>docker compose para stacks</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r22-1"><label for="r22-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=pTFZFxd4hOI" target="_blank">Docker Crash Course — Programming with Mosh</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r22-2"><label for="r22-2"><span class="resource-tag">Lectura</span><a href="https://docs.docker.com/get-started/" target="_blank">Docker Get Started — docs oficiales</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r22-3"><label for="r22-3"><span class="resource-tag">Cheatsheet</span><a href="https://dockerlabs.collabnix.com/docker/cheatsheet/" target="_blank">Docker Cheatsheet</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r22-4"><label for="r22-4"><span class="resource-tag">Lab</span><a href="https://labs.play-with-docker.com/" target="_blank">Play with Docker (lab online gratis)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> dockeriza una app simple (Flask/Express), súbelo a Docker Hub, levanta el stack con compose (app + nginx + postgres).</div>
+        </div>
+      </div>
+
+      <!-- DÍA 23 -->
+      <div class="day" data-day="23">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 23</span>
+          <span class="day-title">Ansible — automatizar configuración</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Inventory, playbooks, roles, handlers</li>
+              <li>Idempotencia: por qué importa</li>
+              <li>Vault para secretos</li>
+              <li>Comparación con Puppet/Chef/Salt (panorama)</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r23-1"><label for="r23-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=goclfp6a2IQ" target="_blank">Ansible 101 — Jeff Geerling (playlist completa)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r23-2"><label for="r23-2"><span class="resource-tag">Docs</span><a href="https://docs.ansible.com/ansible/latest/getting_started/index.html" target="_blank">Ansible Getting Started</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r23-3"><label for="r23-3"><span class="resource-tag">Lectura</span><a href="https://www.redhat.com/en/topics/automation/learning-ansible-tutorial" target="_blank">Ansible Tutorial — Red Hat</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r23-4"><label for="r23-4"><span class="resource-tag">Repo</span><a href="https://github.com/geerlingguy/ansible-for-devops" target="_blank">Ansible for DevOps (libro + ejemplos)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> escribe un playbook que tome una VM nueva y la deje endurecida (usuarios, ssh, ufw, fail2ban, nginx) en un solo comando.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 24 -->
+      <div class="day" data-day="24">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 24</span>
+          <span class="day-title">Monitoreo: Prometheus + Grafana</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Modelo pull de Prometheus, exporters, node_exporter</li>
+              <li>Queries básicas en PromQL</li>
+              <li>Dashboards y alerting en Grafana</li>
+              <li>Alternativas: Zabbix (más clásico) y Netdata (instantáneo)</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r24-1"><label for="r24-1"><span class="resource-tag">Curso</span><a href="https://www.youtube.com/watch?v=h4Sl21AKiDg" target="_blank">Prometheus + Grafana — TechWorld with Nana</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r24-2"><label for="r24-2"><span class="resource-tag">Docs</span><a href="https://prometheus.io/docs/introduction/overview/" target="_blank">Prometheus Overview</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r24-3"><label for="r24-3"><span class="resource-tag">Lectura</span><a href="https://grafana.com/tutorials/" target="_blank">Grafana Tutorials</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r24-4"><label for="r24-4"><span class="resource-tag">Lectura</span><a href="https://www.zabbix.com/manuals" target="_blank">Zabbix Manuals (alternativa)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> instala node_exporter en 2 VMs, scrapealas con Prometheus, crea un dashboard de Grafana con CPU/RAM/disco y configura una alerta a email.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 25 -->
+      <div class="day" data-day="25">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 25</span>
+          <span class="day-title">Logs centralizados: Loki / ELK</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Por qué centralizar logs</li>
+              <li>Loki + Promtail (ligero, integra con Grafana)</li>
+              <li>ELK / OpenSearch (más pesado, más potente)</li>
+              <li>Retención y rotación</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r25-1"><label for="r25-1"><span class="resource-tag">Lectura</span><a href="https://grafana.com/docs/loki/latest/" target="_blank">Loki Docs</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r25-2"><label for="r25-2"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=h_GGd7HfKQ8" target="_blank">Loki + Promtail Tutorial</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r25-3"><label for="r25-3"><span class="resource-tag">Lectura</span><a href="https://www.elastic.co/guide/en/elastic-stack/current/index.html" target="_blank">Elastic Stack Guide</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r25-4"><label for="r25-4"><span class="resource-tag">Lectura</span><a href="https://opensearch.org/docs/latest/" target="_blank">OpenSearch Docs</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> envía logs de Nginx de 2 VMs a Loki, búscalos por etiqueta en Grafana.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 26 -->
+      <div class="day" data-day="26">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 26</span>
+          <span class="day-title">Plan de migración real: del proveedor a tu infra</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Checklist crítico</p>
+            <ul class="topic-list">
+              <li>Inventario completo: ¿qué servicios, qué dominios, qué credenciales, qué certificados?</li>
+              <li>Diagrama de red actual del proveedor</li>
+              <li>Dependencias entre servicios (qué depende de qué)</li>
+              <li>Ventana de migración por servicio (cutover plan)</li>
+              <li>Plan de rollback por cada paso</li>
+              <li>Comunicación a stakeholders y usuarios finales</li>
+              <li>Pruebas en paralelo antes de cortar</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r26-1"><label for="r26-1"><span class="resource-tag">Lectura</span><a href="https://www.atlassian.com/incident-management/postmortem/templates" target="_blank">Plantillas de runbook — Atlassian</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r26-2"><label for="r26-2"><span class="resource-tag">Lectura</span><a href="https://sre.google/sre-book/table-of-contents/" target="_blank">Google SRE Book (capítulos clave: Monitoring, Postmortem)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r26-3"><label for="r26-3"><span class="resource-tag">Lectura</span><a href="https://aws.amazon.com/cloud-migration/how-to-migrate/" target="_blank">AWS Migration Strategies (las 7 R)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r26-4"><label for="r26-4"><span class="resource-tag">Lectura</span><a href="https://martinfowler.com/articles/break-monolith-into-microservices.html" target="_blank">Strangler Fig pattern — Martin Fowler</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Entrega del día:</strong> redacta un documento de transición ficticio: inventario, riesgos, cronograma por servicio, y rollback. Esto será la plantilla cuando recibas el handover real.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 27 -->
+      <div class="day" data-day="27">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 27</span>
+          <span class="day-title">Documentación, runbooks y diagramas</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Qué entender</p>
+            <ul class="topic-list">
+              <li>Wiki interna: BookStack, Outline, Notion</li>
+              <li>Diagramas: draw.io, Excalidraw, Mermaid</li>
+              <li>Runbooks: cómo escribirlos para tu yo de las 3 AM</li>
+              <li>Gestión de credenciales: Bitwarden, Vaultwarden, HashiCorp Vault</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r27-1"><label for="r27-1"><span class="resource-tag">Tool</span><a href="https://www.bookstackapp.com/" target="_blank">BookStack (wiki self-hosted)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r27-2"><label for="r27-2"><span class="resource-tag">Tool</span><a href="https://app.diagrams.net/" target="_blank">draw.io / diagrams.net</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r27-3"><label for="r27-3"><span class="resource-tag">Tool</span><a href="https://github.com/dani-garcia/vaultwarden" target="_blank">Vaultwarden (Bitwarden self-hosted)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r27-4"><label for="r27-4"><span class="resource-tag">Lectura</span><a href="https://www.atlassian.com/incident-management/incident-response/how-to-create-an-incident-response-plan" target="_blank">Cómo escribir runbooks — Atlassian</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> diagrama tu lab actual (VMs, redes, servicios) en draw.io. Escribe un runbook para "el sitio web no carga".</div>
+        </div>
+      </div>
+
+      <!-- DÍA 28 -->
+      <div class="day" data-day="28">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 28</span>
+          <span class="day-title">Troubleshooting: qué hacer cuando algo falla</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Métodos sistemáticos</p>
+            <ul class="topic-list">
+              <li>Aislar el problema: ¿red, servicio, OS, hardware?</li>
+              <li>USE method (Utilization, Saturation, Errors)</li>
+              <li>RED method para servicios (Rate, Errors, Duration)</li>
+              <li>Herramientas: ping, traceroute, mtr, ss, lsof, strace, dmesg</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r28-1"><label for="r28-1"><span class="resource-tag">Lectura</span><a href="https://www.brendangregg.com/usemethod.html" target="_blank">USE Method — Brendan Gregg</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r28-2"><label for="r28-2"><span class="resource-tag">Cheatsheet</span><a href="https://www.brendangregg.com/Perf/linux_observability_tools.png" target="_blank">Linux Performance Tools (mapa)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r28-3"><label for="r28-3"><span class="resource-tag">Lectura</span><a href="https://www.thegeekstuff.com/2010/11/50-linux-commands/" target="_blank">50 Linux Sysadmin Commands</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r28-4"><label for="r28-4"><span class="resource-tag">Video</span><a href="https://www.youtube.com/watch?v=fhBHvsi0Ql0" target="_blank">Linux Performance Analysis — Brendan Gregg</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Práctica:</strong> rompe a propósito una VM (firewall mal configurado, servicio caído, disco lleno) y resuélvela cronometrándote.</div>
+        </div>
+      </div>
+
+      <!-- DÍA 29 -->
+      <div class="day" data-day="29">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 29</span>
+          <span class="day-title">Proyecto final integrador</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Reto: monta una infra "de empresa" desde cero</p>
+            <ul class="topic-list">
+              <li>1 VM como router/firewall (pfSense u OPNsense)</li>
+              <li>2 VLANs (servidores y clientes), inter-VLAN routing</li>
+              <li>1 servidor DNS + DHCP interno</li>
+              <li>1 web server con Nginx + HTTPS detrás del firewall</li>
+              <li>1 servidor de monitoreo (Prometheus + Grafana)</li>
+              <li>Backups automáticos a otra VM/cloud</li>
+              <li>Acceso remoto vía WireGuard</li>
+              <li>Provisioning con Ansible</li>
+              <li>Documentación + diagrama</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Tools que vas a usar</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r29-1"><label for="r29-1"><span class="resource-tag">Firewall</span><a href="https://www.opnsense.org/" target="_blank">OPNsense (recomendado, fork moderno de pfSense)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r29-2"><label for="r29-2"><span class="resource-tag">Hipervisor</span><a href="https://www.proxmox.com/en/proxmox-virtual-environment/overview" target="_blank">Proxmox VE (host del lab)</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r29-3"><label for="r29-3"><span class="resource-tag">Repo ref</span><a href="https://github.com/practical-tutorials/project-based-learning#devops-and-system-administration" target="_blank">Proyectos prácticos DevOps/SysAdmin</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r29-4"><label for="r29-4"><span class="resource-tag">Inspiración</span><a href="https://github.com/awesome-selfhosted/awesome-selfhosted" target="_blank">Awesome Self-Hosted (lista enorme)</a></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 30 -->
+      <div class="day" data-day="30">
+        <div class="day-header" onclick="toggleDay(this)">
+          <span class="day-toggle">▶</span>
+          <span class="day-label">Día 30</span>
+          <span class="day-title">Cierre, certificaciones y plan a largo plazo</span>
+          <span class="day-progress"></span>
+        </div>
+        <div class="day-content">
+          <div class="section">
+            <p class="section-title">Hacia dónde apuntar después</p>
+            <ul class="topic-list">
+              <li><strong>CompTIA Network+ / Linux+</strong> — base sólida y demostrable</li>
+              <li><strong>RHCSA</strong> — la cert que más te exigen como sysadmin Linux</li>
+              <li><strong>AWS Solutions Architect Associate</strong> — si vas hacia cloud</li>
+              <li><strong>CCNA</strong> — si manejarás switching/routing serio</li>
+              <li>Kubernetes (CKA) — el siguiente salto natural desde Docker</li>
+              <li>Terraform — infraestructura como código</li>
+            </ul>
+          </div>
+          <div class="section">
+            <p class="section-title">Recursos para continuar</p>
+            <ul class="resources">
+              <li class="resource-item"><input type="checkbox" id="r30-1"><label for="r30-1"><span class="resource-tag">Roadmap</span><a href="https://roadmap.sh/devops" target="_blank">DevOps Roadmap — roadmap.sh</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r30-2"><label for="r30-2"><span class="resource-tag">Cert</span><a href="https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam" target="_blank">RHCSA — Red Hat</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r30-3"><label for="r30-3"><span class="resource-tag">Cert</span><a href="https://www.comptia.org/certifications/network" target="_blank">CompTIA Network+</a></label></li>
+              <li class="resource-item"><input type="checkbox" id="r30-4"><label for="r30-4"><span class="resource-tag">Comunidad</span><a href="https://www.reddit.com/r/sysadmin/" target="_blank">r/sysadmin (Reddit)</a></label></li>
+            </ul>
+          </div>
+          <div class="practice"><strong>Hoy:</strong> haz un repaso honesto: ¿qué temas dominas?, ¿en cuáles dudas?, ¿cuáles repetir? Anótalos. Tu plan largo (de experto) lo retomas mañana sobre estas bases.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Roadmap intensivo · 30 días · Tu progreso se guarda en tu navegador.
+    </footer>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'roadmap-30d-progress';
+  const OPEN_KEY = 'roadmap-30d-open';
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function loadOpen() {
+    try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function saveOpen(state) {
+    localStorage.setItem(OPEN_KEY, JSON.stringify(state));
+  }
+
+  function updateProgress() {
+    const checkboxes = document.querySelectorAll('.resource-item input[type="checkbox"]');
+    const total = checkboxes.length;
+    let done = 0;
+    checkboxes.forEach(cb => { if (cb.checked) done++; });
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+    document.getElementById('percent').textContent = pct + '%';
+    document.getElementById('fill').style.width = pct + '%';
+    document.getElementById('completed-count').textContent = done + ' / ' + total + ' recursos';
+
+    // contar días con TODO completo
+    const days = document.querySelectorAll('.day');
+    let daysDone = 0;
+    days.forEach(day => {
+      const cbs = day.querySelectorAll('input[type="checkbox"]');
+      if (cbs.length === 0) return;
+      const allChecked = Array.from(cbs).every(c => c.checked);
+      if (allChecked) {
+        day.classList.add('completed');
+        daysDone++;
+      } else {
+        day.classList.remove('completed');
+      }
+      // progreso por día
+      const progress = day.querySelector('.day-progress');
+      const dayDone = Array.from(cbs).filter(c => c.checked).length;
+      progress.textContent = dayDone + '/' + cbs.length;
+    });
+    document.getElementById('days-count').textContent = daysDone + ' / 30 días';
+  }
+
+  function toggleDay(header) {
+    const day = header.parentElement;
+    day.classList.toggle('open');
+    const openState = loadOpen();
+    const id = day.dataset.day;
+    openState[id] = day.classList.contains('open');
+    saveOpen(openState);
+  }
+
+  // bootstrapping
+  document.addEventListener('DOMContentLoaded', () => {
+    const state = loadState();
+    const openState = loadOpen();
+
+    document.querySelectorAll('.resource-item input[type="checkbox"]').forEach(cb => {
+      if (state[cb.id]) {
+        cb.checked = true;
+        cb.parentElement.classList.add('checked');
+      }
+      cb.addEventListener('change', () => {
+        state[cb.id] = cb.checked;
+        saveState(state);
+        cb.parentElement.classList.toggle('checked', cb.checked);
+        updateProgress();
+      });
+      // click en el row tambien
+    });
+
+    // restaurar días abiertos
+    document.querySelectorAll('.day').forEach(day => {
+      if (openState[day.dataset.day]) day.classList.add('open');
+    });
+
+    updateProgress();
+  });
+
+  function resetProgress() {
+    if (!confirm('¿Reiniciar todo el progreso? Esto borrará tus marcas.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.resource-item input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+      cb.parentElement.classList.remove('checked');
+    });
+    updateProgress();
+  }
+</script>
+</body>
+</html>
